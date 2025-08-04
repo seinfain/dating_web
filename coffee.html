@@ -124,17 +124,8 @@
         const selectedDate = dateInput.value;
         if (!selectedDate) return alert('Please select a date first.');
 
-        supabase
-            .from('sf_table')
-            .insert([{ selected_date: selectedDate }])
-            .then(({ error }) => {
-            if (error) {
-                console.error('❌ DB save error:', error.message);
-            }
-            });
-
         // Redirect immediately without waiting
-        window.location.href = `meet.html?date=${encodeURIComponent(selectedDate)}`;
+        window.location.href = `rating.html?date=${encodeURIComponent(selectedDate)}`;
     });
   </script>
 

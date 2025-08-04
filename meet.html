@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Remember Our Day 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 60px 20px;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #ffd6d6, #f7e6e6);
+      color: #6a2c70;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    h1 {
+      font-family: 'Parisienne', cursive;
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: #b83280;
+      text-shadow: 2px 2px 6px rgba(184, 50, 128, 0.4);
+      animation: fadeInDown 1s ease forwards;
+      opacity: 0;
+      margin-top: -10%;
+    }
+    #message {
+      font-size: 1.8rem;
+      font-weight: 600;
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff0f6;
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(184, 50, 128, 0.15);
+      color: #8a2c7f;
+      animation: fadeInUp 1.3s ease forwards;
+      opacity: 0;
+      line-height: 1.4;
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* subtle floating hearts background */
+    body::before {
+      content: "💖💞💕💘";
+      position: fixed;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 6rem;
+      color: #e94e77;
+      opacity: 0.15;
+      user-select: none;
+      pointer-events: none;
+      animation: floatHearts 6s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+    @keyframes floatHearts {
+      0% { transform: translateX(-50%) translateY(0); }
+      100% { transform: translateX(-50%) translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Looking Forward to It! 💫</h1>
+  <div id="message">Loading your special day...</div>
+
+  <script>
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    const selectedDate = getQueryParam('date');
+
+    if (selectedDate) {
+      const formattedDate = new Date(selectedDate).toLocaleDateString(undefined, {
+        day: 'numeric', month: 'long', year: 'numeric'
+      });
+
+      document.getElementById('message').textContent =
+        `This day will be ours, can’t wait to see you soon! ${formattedDate}`;
+    } else {
+      document.getElementById('message').textContent = "Oops, no date selected!";
+    }
+  </script>
+
+</body>
+</html>

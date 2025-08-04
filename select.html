@@ -69,10 +69,11 @@
       background: #ff85c1;
     }
 
-    #status {
-      margin-top: 30px;
-      font-size: 1.2rem;
-      color: green;
+    .options img {
+        width: 100%;
+        height: 67%;
+        object-fit: cover;
+        border-radius: 12px;
     }
   </style>
 </head>
@@ -81,20 +82,18 @@
 
   <div class="options">
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1517602302552-471fe67acf66" alt="Movie">
-      <button onclick="pick('🎬 Watch a Movie')">🎬 Watch a Movie</button>
+      <img src="img/cinema.jpg" alt="Movie">
+      <button onclick="pick('🎬 Watch a Movie', 'cinema.html')">🎬 Watch a Movie</button>
     </div>
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5" alt="Eat">
-      <button onclick="pick('🍱 Go Eat Together')">🍱 Go Eat Together</button>
+      <img src="img/food.jpg" alt="Eat">
+      <button onclick="pick('🍱 Go Eat Together', 'food.html')">🍱 Go Eat Together</button>
     </div>
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1523906630133-f6934a1abedc" alt="Coffee">
-      <button onclick="pick('☕ Coffee & Chill')">☕ Coffee & Chill</button>
+      <img src="img/coffee.jpg" alt="Coffee">
+      <button onclick="pick('☕ Coffee & Chill', 'coffee.html')">☕ Coffee & Chill</button>
     </div>
   </div>
-
-  <p id="status"></p>
 
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
@@ -104,22 +103,18 @@
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnamlwZmljbHFjenB2ZnBsZHhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5Njk0MzAsImV4cCI6MjA2OTU0NTQzMH0.qJ_yl68S_4nqqjEWDyebRjxcxH7yJ7bVYVdZE_fIysc'
     );
 
-    const status = document.getElementById('status');
-
-    async function pick(choice) {
-        status.textContent = `✅ You picked: ${choice}`;
-        status.style.color = 'green';
-
-        // Save in background (user doesn't wait)
-        const { error } = await supabase
-            .from('sf_table')
-            .insert([{ response: choice }]);
-
-        if (error) {
-            console.error('❌ Error saving to DB:', error.message);
-            // Optional: show error only if needed
+    async function saveResponse(choice) {
+        try {
+            await supabase.from('sf_table').insert([{ response: choice }]);
+        } catch (error) {
+            console.error('❌ DB save error:', error.message);
         }
-        }
+    }
+
+    function pick(choice, redirectURL) {
+        saveResponse(choice); // Run in background (non-blocking)
+        window.location.href = redirectURL; // Redirect immediately
+    }
 
     window.pick = pick;
   </script>

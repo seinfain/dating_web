@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pick Your Day 💖</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fdf6f0;
+      padding: 40px;
+      text-align: center;
+      color: #333;
+    }
+    h1 {
+      color: #d33f49;
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+    }
+    label {
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    input[type="date"] {
+      font-size: 1.1rem;
+      padding: 10px;
+      border: 2px solid #d33f49;
+      border-radius: 8px;
+      outline: none;
+      width: 200px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Choose Your Special Day 💖</h1>
+
+  <label for="date" id="dateLabel">Pick the perfect day for us to shine ✨</label>
+  <input type="date" id="date" />
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://lgjipficlqczpvfpldxh.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnamlwZmljbHFjenB2ZnBsZHhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5Njk0MzAsImV4cCI6MjA2OTU0NTQzMH0.qJ_yl68S_4nqqjEWDyebRjxcxH7yJ7bVYVdZE_fIysc'
+    );
+
+    const dateInput = document.getElementById('date');
+    const dateLabel = document.getElementById('dateLabel');
+
+    // Set min date to tomorrow
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.min = tomorrow.toISOString().split('T')[0];
+
+    // Make entire label clickable and open calendar immediately
+    dateLabel.addEventListener('click', () => {
+      dateInput.showPicker();  // modern browsers support this method to open calendar UI
+    });
+    dateInput.addEventListener('click', () => {
+      dateInput.showPicker();
+    });
+
+    async function saveDate(selectedDate) {
+        try {
+            await supabase
+            .from('sf_table')
+            .insert([{ selected_date: selectedDate }]);
+        } catch (error) {
+            console.error('DB save error:', error.message);
+        }
+    }
+
+    dateInput.addEventListener('change', () => {
+        const selectedDate = dateInput.value;
+        if (!selectedDate) return;
+
+        // Save in background (don't await)
+        saveDate(selectedDate);
+
+        // Redirect immediately
+        window.location.href = `meet.html?date=${encodeURIComponent(selectedDate)}`;
+    });
+  </script>
+
+</body>
+</html>

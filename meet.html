@@ -74,7 +74,7 @@
 <body>
 
   <h1>Looking Forward to It! 💫</h1>
-  <div id="message">Loading your special day...</div>
+  <div id="message" style="width: 40%;">Loading your special day...</div>
 
   <script>
     function getQueryParam(param) {
@@ -89,8 +89,8 @@
         day: 'numeric', month: 'long', year: 'numeric'
       });
 
-      document.getElementById('message').textContent =
-        `Can’t wait to see you soon! ${formattedDate}`;
+      document.getElementById('message').innerHTML = 
+        `<img src="img/cat.gif" style="height:70%; width: 65%;"><br>Can’t wait to see you soon! <br> ${formattedDate}`;
     } else {
       document.getElementById('message').textContent = "Oops, no date selected!";
     }

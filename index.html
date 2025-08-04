@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Do You Want to Date Me?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6e6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      color: #ff4d4d;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .yes {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .no {
+      background-color: #f44336;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Do You Want to Date Me?</h1>
+    <button class="yes" id="yesBtn">Yes ❤️</button>
+    <button class="no" id="noBtn">No 😢</button>
+  </div>
+</body>
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabaseUrl = 'https://lgjipficlqczpvfpldxh.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxnamlwZmljbHFjenB2ZnBsZHhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5Njk0MzAsImV4cCI6MjA2OTU0NTQzMH0.qJ_yl68S_4nqqjEWDyebRjxcxH7yJ7bVYVdZE_fIysc';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+
+  let noClickCount = 0;
+  let yesFontSize = 18;
+
+  yesBtn.addEventListener('click', async () => {
+    saveResponse('yes'); // 🔁 Run in background
+    window.location.href = 'select.html'; // ✅ Redirect immediately
+  });
+
+  noBtn.addEventListener('click', () => {
+    noClickCount++;
+    yesFontSize += 8;
+    yesBtn.style.fontSize = yesFontSize + 'px';
+
+    if (noClickCount === 1) {
+      noBtn.style.transform = 'scale(0.8)';
+    } else if (noClickCount === 2) {
+      noBtn.style.transform = 'scale(0.5)';
+    } else if (noClickCount >= 3) {
+      noBtn.style.display = 'none';
+    }
+
+    status.textContent = "✅ Response saved: no";
+    saveResponse('no');
+  });
+
+  async function saveResponse(response) {
+    const { error } = await supabase
+      .from('sf_table')
+      .insert([{ response }]);
+
+    if (error) {
+      console.error('❌ Error:', error.message);
+    }
+  }
+</script>
+</html>

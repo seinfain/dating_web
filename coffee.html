@@ -30,6 +30,35 @@
       outline: none;
       width: 200px;
       cursor: pointer;
+      /* Make whole input area clickable */
+      display: inline-block;
+    }
+    .btn-group {
+      margin-top: 20px;
+      display: none;
+      gap: 15px;
+      justify-content: center;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button.confirm {
+      background-color: #d33f49;
+    }
+    button.confirm:hover {
+      background-color: #a72c36;
+    }
+    button.cancel {
+      background-color: #888;
+    }
+    button.cancel:hover {
+      background-color: #555;
     }
   </style>
 </head>
@@ -40,6 +69,11 @@
   <label for="date" id="dateLabel">Pick the perfect day for us to shine ✨</label>
   <input type="date" id="date" />
 
+  <div class="btn-group" id="btnGroup">
+      <button class="cancel" id="cancelBtn">Cancel</button>
+      <button class="confirm" id="confirmBtn">Confirm</button>
+  </div>
+
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -49,7 +83,9 @@
     );
 
     const dateInput = document.getElementById('date');
-    const dateLabel = document.getElementById('dateLabel');
+    const btnGroup = document.getElementById('btnGroup');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
 
     // Set min date to tomorrow
     const today = new Date();
@@ -57,32 +93,47 @@
     tomorrow.setDate(tomorrow.getDate() + 1);
     dateInput.min = tomorrow.toISOString().split('T')[0];
 
-    // Make entire label clickable and open calendar immediately
-    dateLabel.addEventListener('click', () => {
-      dateInput.showPicker();  // modern browsers support this method to open calendar UI
-    });
+    // Make clicking anywhere on the input open calendar picker
     dateInput.addEventListener('click', () => {
-      dateInput.showPicker();
+      if (typeof dateInput.showPicker === 'function') {
+        dateInput.showPicker();
+      }
     });
 
-    async function saveDate(selectedDate) {
-        try {
-            await supabase
-            .from('sf_table')
-            .insert([{ selected_date: selectedDate }]);
-        } catch (error) {
-            console.error('DB save error:', error.message);
-        }
+    // Show buttons when date is selected
+    function toggleButtons() {
+      if (dateInput.value) {
+        btnGroup.style.display = 'flex';
+      } else {
+        btnGroup.style.display = 'none';
+      }
     }
+    toggleButtons();
 
-    dateInput.addEventListener('change', () => {
+    dateInput.addEventListener('input', toggleButtons);
+    dateInput.addEventListener('change', toggleButtons);
+
+    // Cancel button clears selection and hides buttons
+    cancelBtn.addEventListener('click', () => {
+      dateInput.value = '';
+      toggleButtons();
+    });
+
+    // Confirm button saves and redirects
+    confirmBtn.addEventListener('click', () => {
         const selectedDate = dateInput.value;
-        if (!selectedDate) return;
+        if (!selectedDate) return alert('Please select a date first.');
 
-        // Save in background (don't await)
-        saveDate(selectedDate);
+        supabase
+            .from('sf_table')
+            .insert([{ selected_date: selectedDate }])
+            .then(({ error }) => {
+            if (error) {
+                console.error('❌ DB save error:', error.message);
+            }
+            });
 
-        // Redirect immediately
+        // Redirect immediately without waiting
         window.location.href = `meet.html?date=${encodeURIComponent(selectedDate)}`;
     });
   </script>

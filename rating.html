@@ -166,7 +166,7 @@
       ratingValue.textContent = `Rating: ${ratingSlider.value}`;
     });
 
-    confirmRatingBtn.addEventListener('click', async () => {
+    confirmRatingBtn.addEventListener('click', () => {
       const rating = parseInt(ratingSlider.value);
 
       // Save in background
@@ -178,8 +178,6 @@
             console.error('❌ DB save error:', error.message);
         }
       });
-
-      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Go to meet.html
       window.location.href = `meet.html?date=${encodeURIComponent(selectedDate)}`;

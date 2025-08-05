@@ -91,13 +91,15 @@
   });
 
   async function saveResponse(response) {
-    const { error } = await supabase
-      .from('sf_table')
-      .insert([{ response }]);
-
-    if (error) {
-      console.error('❌ Error:', error.message);
+    
+    
+    try {
+            await supabase.from('sf_table').insert([{ response }]);
+        } catch (error) {
+            console.error('❌ DB save error:', error.message);
     }
+
+    
   }
 </script>
 </html>

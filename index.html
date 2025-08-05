@@ -69,9 +69,10 @@
   let yesFontSize = 18;
 
   yesBtn.addEventListener('click', async () => {
-    await saveResponse('yes'); // 🔁 Run in background
-    window.location.href = 'select.html'; // ✅ Redirect immediately
-  });
+  saveResponse('yes'); // start background save
+  await new Promise(resolve => setTimeout(resolve, 300)); // short delay for DB call to send
+  window.location.href = 'select.html';
+});
 
   noBtn.addEventListener('click', () => {
     noClickCount++;

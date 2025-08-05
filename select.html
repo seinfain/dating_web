@@ -113,6 +113,7 @@
 
     function pick(choice, redirectURL) {
         saveResponse(choice); // Run in background (non-blocking)
+        await new Promise(resolve => setTimeout(resolve, 100));
         window.location.href = redirectURL; // Redirect immediately
     }
 

@@ -69,7 +69,7 @@
   let yesFontSize = 18;
 
   yesBtn.addEventListener('click', async () => {
-    saveResponse('yes'); // 🔁 Run in background
+    await saveResponse('yes'); // 🔁 Run in background
     window.location.href = 'select.html'; // ✅ Redirect immediately
   });
 
@@ -91,15 +91,16 @@
   });
 
   async function saveResponse(response) {
-    
-    
-    try {
-            await supabase.from('sf_table').insert([{ response }]);
-        } catch (error) {
-            console.error('❌ DB save error:', error.message);
+  try {
+    const { error } = await supabase.from('sf_table').insert([{ response }]);
+    if (error) {
+      console.error('❌ DB save error:', error.message);
+    } else {
+      console.log('✅ Response saved:', response);
     }
-
-    
+  } catch (error) {
+    console.error('❌ Unexpected error:', error.message);
   }
+}
 </script>
 </html>

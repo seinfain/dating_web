@@ -179,6 +179,8 @@
         }
       });
 
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       // Go to meet.html
       window.location.href = `meet.html?date=${encodeURIComponent(selectedDate)}`;
     });

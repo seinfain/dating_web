@@ -120,9 +120,10 @@
     });
 
     // Confirm button saves and redirects
-    confirmBtn.addEventListener('click', () => {
+    confirmBtn.addEventListener('click', async () => {
         const selectedDate = dateInput.value;
         if (!selectedDate) return alert('Please select a date first.');
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         // Redirect immediately without waiting
         window.location.href = `rating.html?date=${encodeURIComponent(selectedDate)}`;
